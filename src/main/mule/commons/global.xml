@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+    <http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="8b90d7fe-c5bb-4dfc-82c6-88f51e5226f5">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="fakestore-s-api-config" api="resource::706f4d0a-e4a3-40fb-8365-ae5ac1f0a8d7:fakestore-s-api:1.0.3:raml:zip:fakestore-s-api.raml" outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" />
+    <api-gateway:autodiscovery apiId="17677719" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a725e517-f777-4ae2-9c07-985d763b86dd" flowRef="fakestore-s-api-main" />
+    <configuration-properties doc:name="Configuration properties" doc:id="5358fb9e-7ee7-45f1-9db5-4330d69f5df3" file="config/${api.env}.yaml" />
+    <configuration-properties doc:name="Configuration properties" doc:id="a606d607-5d7d-4cdc-bf8c-59b76836c4bf" file="config\global.yaml" />
+    <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="d470dec1-ec1a-4885-96d8-7c11380cc4a8" key="${api.key}" file="config\local-secure.yaml">
+        <secure-properties:encrypt algorithm="Blowfish"/>
+    </secure-properties:config>
+	<mongo:config name="MongoDB_Config" doc:name="MongoDB Config" doc:id="f914e60a-7550-4db7-827c-4282a02e3e55" >
+		<mongo:connection database="${mongodb.name}" username="${secure::mongodb.user}" password="${secure::mongodb.password}" authenticationMechanism="SCRAM_SHA_1" replicaSetName="atlas-me2rgo-shard-0" authenticationSource="admin" >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+			<mongo:server-addresses >
+				<mongo:server-address host="${mongodb.host.primary}" port="${mongodb.port}"/>
+				<mongo:server-address host="${mongodb.host.secondary1}" port="${mongodb.port}"/>
+				<mongo:server-address host="${mongodb.host.secondary2}" port="${mongodb.port}"/>
+			</mongo:server-addresses>
+		</mongo:connection>
+	</mongo:config>
+</mule>

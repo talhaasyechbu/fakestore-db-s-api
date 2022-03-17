@@ -1,0 +1,16 @@
+api:
+  id: "17677719"
+  
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  path: "/api/*"
+  timeout: "30000"
+
+fakestore:
+  db:
+    host: "127.0.0.1"
+    port: "3306"
+    until.successful:
+        attempts: "1"
+        interval: "500"

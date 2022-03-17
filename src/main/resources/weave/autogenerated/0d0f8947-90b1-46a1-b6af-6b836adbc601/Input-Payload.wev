@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_0d0f8947_90b1_46a1_b6af_6b836adbc601_Input_Payload = {
+  purchaseDate?: String, 
+  createdBy?: String, 
+  price: Number, 
+  id: Number, 
+  title: String, 
+  _?: Any
+}
+
