@@ -148,4 +148,5 @@ type sales = Array<{|  id: String,   cartId: Number {"typeId": "int"},   userId:
       </types:input-event>
     </types:processor-declaration>
   </types:enrichment>
+  <types:enrichment select="#d41ee123-5918-491f-bde5-a6cb599ca599"/>
 </types:mule>

@@ -7,8 +7,8 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd">
 	<flow name="post-checkout-flow" doc:id="0d0f8947-90b1-46a1-b6af-6b836adbc601" >
-		<logger level="INFO" doc:name="INFO Start Logger" doc:id="d9f79f9f-7f5f-40e4-b24f-56ff5a9dafa0" message='"Start insert checkout to database"' />
-		<mongo:insert-documents doc:name="Insert documents" doc:id="f3d6f4c8-10da-4157-98bc-4e400ba376b7" config-ref="mongoDbConfig" collectionName="fakestore">
+		<logger level="INFO" doc:name="INFO Start Logger" doc:id="d9f79f9f-7f5f-40e4-b24f-56ff5a9dafa0" message='"Start Insert Checkout to Database"' />
+		<mongo:insert-documents doc:name="Insert documents" doc:id="f3d6f4c8-10da-4157-98bc-4e400ba376b7" config-ref="mongo-db-config" collectionName="fakestore">
 			<mongo:documents ><![CDATA[#[output application/json
 ---
 payload map ( payload01 , indexOfPayload01 ) -> {
@@ -23,44 +23,19 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		</mongo:insert-documents>
 		<ee:transform doc:name="Set Payload Response" doc:id="b85b85f3-9039-4930-b5bb-3023ee794a12" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-{
-	"header" : {
-	"apiName": p('api.name'),
-	"apiVersion": p('api.version'),
-	"correlationId" : attributes.headers.'x-correlation-id'
-	},
-	"data" : {
-		"message" : "data submited",
-		"employeeId": "admin"
-	}
-}]]></ee:set-payload>
 			</ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dataweave\insert-database-response.dwl" variableName="succesResponse" />
+			</ee:variables>
 		</ee:transform>
-		<logger level="INFO" doc:name="INFO End Logger" doc:id="b36daeae-2771-432e-8631-4d9472443949" message='"End transaction inserting data into DB "' />
+		<logger level="INFO" doc:name="INFO End Logger" doc:id="b36daeae-2771-432e-8631-4d9472443949" message='"End Transaction Inserting Data Into DB"' />
 		<error-handler >
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="738bcbef-be89-4edc-a2d5-19d0ffd3ff09" type="MONGO:CONNECTIVITY, MONGO:TIMEOUT">
-				<ee:transform doc:name="Transform Message" doc:id="d41ee123-5918-491f-bde5-a6cb599ca599" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-output application/java
----
- {
-        "header" : {
-          "apiName": p('api.name'),
-          "apiVersion": p('api.version'),
-          "correlationId" : attributes.headers."x-correlation-id"
-        },
-        "error" : {
-            "description" : "Internal Server Error",
-            "code": "500",
-            "timestamp": now()
-        }
-      }]]></ee:set-payload>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cf124181-e70b-4179-a61e-35a2e7794543" type="MONGO:TIMEOUT">
+				<ee:transform doc:name="Set Error Response" doc:id="d41ee123-5918-491f-bde5-a6cb599ca599">
+					<ee:message>
 					</ee:message>
-					<ee:variables >
+					<ee:variables>
+						<ee:set-variable resource="dataweave\error-connection-to-db.dwl" variableName="errorConnection" />
 						<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>

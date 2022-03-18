@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
     <flow name="fakestore-s-api-main">
-        <http:listener path="${http.path}" config-ref="httpListenerConfig">
+        <http:listener path="${http.path}" config-ref="http-listener-config">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
@@ -11,35 +12,18 @@
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="fakestore-s-api-config" />
-        <error-handler ref="errorHandler"/>
+        <error-handler ref="APIKIT-error-handler"/>
     </flow>
     <flow name="get:\health:fakestore-s-api-config">
-        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+        <ee:transform doc:name="Set Response Health Check" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
             <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  title: "health-check-response",
-  examples: {
-    "health-chech-response": {
-      header: {
-        apiName: p('api.name'),
-        apiVersion: p('api.version'),
-        correlationId: "0AD645D1-C06E-40AF-80D5-A0316CD190CC"
-      },
-      data: {
-        apiStatus: "Alive",
-        downStreamType: "Resource API",
-        downStreamStatus: "Alive"
-      }
-    }
-  }
-}]]></ee:set-payload>
             </ee:message>
+			<ee:variables >
+				<ee:set-variable resource="dataweave\health-check-response.dwl" variableName="healthCheckResponse" />
+			</ee:variables>
         </ee:transform>
     </flow>
     <flow name="post:\checkout:application\json:fakestore-s-api-config">
-        <flow-ref doc:name="call-post-checkout" doc:id="7c912370-e12a-4c31-91c5-6cb1e94b0e5a" name="post-checkout-flow" />
+        <flow-ref doc:name="Call Post Checkout" doc:id="7c912370-e12a-4c31-91c5-6cb1e94b0e5a" name="post-checkout-flow" />
     </flow>
 </mule>
