@@ -5,7 +5,7 @@ output application/json
 	"header" : {
 	"apiName": p('api.name'),
 	"apiVersion": p('api.version'),
-	"correlationId" : attributes.headers.'x-correlation-id'
+	"correlationId" : correlationId
 	},
 	"data" : {
 		"message" : "data submited",
