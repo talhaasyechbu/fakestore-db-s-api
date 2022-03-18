@@ -1,16 +1,17 @@
 api:
   id: "17677719"
+  name: "Fakestore System API"
+  version: 1.0.0
+
+mongodb:
+  host:
+    primary: "cluster0-shard-00-00.61w5a.mongodb.net"
+    secondary1: "cluster0-shard-00-01.61w5a.mongodb.net"
+    secondary2: "cluster0-shard-00-01.61w5a.mongodb.net"
+  name: "th-mongodb-sales-sapi"
+  port: "27017"
   
 http:
   host: "0.0.0.0"
   port: "8081"
-  path: "/api/*"
-  timeout: "30000"
-
-fakestore:
-  db:
-    host: "127.0.0.1"
-    port: "3306"
-    until.successful:
-        attempts: "1"
-        interval: "500"
+  timeout: "30000" 

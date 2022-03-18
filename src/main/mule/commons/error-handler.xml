@@ -5,14 +5,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	 <error-handler name="APIKIT-error-handler">
+	 <error-handler name="apikit-error-handler">
             <on-error-propagate type="APIKIT:BAD_REQUEST">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/400-error-response.dwl" />
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\400-error-response.dwl" variableName="badRequest" />
                     
 </ee:variables>
                 </ee:transform>
@@ -20,10 +20,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <on-error-propagate type="APIKIT:NOT_FOUND">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/404-error-response.dwl" />
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\404-error-response.dwl" variableName="resourceNotFound" />
                     
 </ee:variables>
                 </ee:transform>
@@ -31,10 +31,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/405-error-response.dwl" />
+
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\405-error-response.dwl" variableName="methodNotAllowed" />
                     
 </ee:variables>
                 </ee:transform>
@@ -42,10 +43,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/406-error-response.dwl" />
+
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\406-error-response.dwl" variableName="notAcceptable" />
                     
 </ee:variables>
                 </ee:transform>
@@ -53,10 +55,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/415-error-response.dwl" />
+
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\415-error-response.dwl" variableName="unsupportedMediaType" />
                     
 </ee:variables>
                 </ee:transform>
@@ -64,10 +67,11 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
                 <ee:transform doc:name="Set Error Response" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
                     <ee:message>
+					<ee:set-payload resource="dataweave/501-error-response.dwl" />
+
                     </ee:message>
                     <ee:variables>
                         <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
-					<ee:set-variable resource="dataweave\501-error-response.dwl" variableName="notImplemented" />
                     
 </ee:variables>
                 </ee:transform>

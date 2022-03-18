@@ -2,7 +2,7 @@
 <mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
     <flow name="fakestore-s-api-main">
-        <http:listener path="${http.path}" config-ref="http-listener-config">
+        <http:listener config-ref="fakestore-db-s-api-http-listener-config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
@@ -12,14 +12,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="fakestore-s-api-config" />
-        <error-handler ref="APIKIT-error-handler"/>
+        <error-handler ref="apikit-error-handler"/>
     </flow>
     <flow name="get:\health:fakestore-s-api-config">
         <ee:transform doc:name="Set Response Health Check" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
             <ee:message>
+				<ee:set-payload resource="dataweave/health-check-response.dwl" />
             </ee:message>
 			<ee:variables >
-				<ee:set-variable resource="dataweave\health-check-response.dwl" variableName="healthCheckResponse" />
 			</ee:variables>
         </ee:transform>
     </flow>
