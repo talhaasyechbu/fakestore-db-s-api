@@ -77,4 +77,37 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
                 </ee:transform>
             </on-error-propagate>
         </error-handler>
+        	<error-handler name="transformation-error-handler">
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bcfc5c78-040a-4e92-b2dd-e584df75093a" type="MONGO:TIMEOUT">
+				<ee:transform doc:name="Set Error Response" doc:id="beb17f8b-8b7d-4393-9214-4ee198450512" >
+					<ee:message >
+						<ee:set-payload resource="dataweave/408-error-response.dwl" />
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[408]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f2c14b63-7d04-4d62-85e4-d02460da044e" type="MONGO:CONNECTIVITY">
+			<ee:transform doc:name="Set Error Response" doc:id="fbbc841f-f225-415a-aeba-c816f920bdd4" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/503-error-response.dwl" />
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[503]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6972f484-2ebd-43e7-ba7c-6b4c1578b99e" type="ANY">
+			<ee:transform doc:name="Set Error Response" doc:id="a3be998b-ab8b-4e2d-9935-9d62a4b8ae2b" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/500-error-response.dwl" />
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[500]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+		
+</error-handler>
 </mule>

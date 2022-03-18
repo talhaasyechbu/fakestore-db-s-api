@@ -27,14 +27,6 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="INFO End Logger" doc:id="b36daeae-2771-432e-8631-4d9472443949" message='#["End Transaction Inserting Data Into DB"]' />
-		<error-handler>
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="20c84c9e-d2b2-4664-a703-056168ba205b" type="MONGO:TIMEOUT">
-				<ee:transform doc:name="Transform Message" doc:id="6a0186bc-df41-40f4-b018-b55fce1b60d8" >
-					<ee:message >
-						<ee:set-payload resource="dataweave/error-connection.dwl" />
-					</ee:message>
-				</ee:transform>
-			</on-error-propagate>
-		</error-handler>
+		<error-handler ref="transformation-error-handler" />
 	</flow>
 </mule>
