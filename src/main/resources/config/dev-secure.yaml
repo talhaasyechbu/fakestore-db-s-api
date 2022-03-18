@@ -1,4 +1,4 @@
-fakestore:
-  db:
-    user: "![bfHZ+COjATqAxnQxmvYgHA==]"
-    password: "![xfNJxK3XvsJdK95nmJoL1gGJsnCaJgV7]"
+mongodb:
+  user: "![kGUrMSl4q+g=]"
+  password: "![jlJv7nV9BolLut+cX5rn3w==]"
+
